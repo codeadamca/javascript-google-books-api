@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Books API</title>
+</head>
+<body>
+
+    <h1>Google Books API</h1>
+
+    <ul id="books"></ul>
+
+    <script>
+
+        var key = '';
+        var url = 'https://www.googleapis.com/books/v1/volumes?q=';
+        var search = 'javascript';
+
+        var httpRequest = new XMLHttpRequest();
+
+        httpRequest.onreadystatechange = function(){
+
+            console.log(httpRequest.readyState);
+            console.log(httpRequest.responseText);
+
+            // If the request is finished loading
+            if(httpRequest.readyState == XMLHttpRequest.DONE)
+            {
+                // Convert the string response to JSON object
+                var data = JSON.parse(httpRequest.responseText);
+                console.log(data);
+
+                // Create a reference to the books UL
+                var books = document.getElementById("books");
+
+                // Loop throught the book from the JSON
+                for(var i = 0; i < data.items.length; i ++)
+                {   
+                    // Fetch title from the next book
+                    var title = data.items[i].volumeInfo.title;
+                    console.log(title);
+
+                    // Fetch the book URL - infoLink or canonicalVolumeLink
+                    var link = data.items[i].volumeInfo.infoLink;
+                    console.log(link);
+
+                    // Fetch the book cover image - smallThumbnail or thumbnail
+                    var image = data.items[i].volumeInfo.imageLinks.smallThumbnail;
+                    console.log(image);
+
+                    // Add boook title, URL, cover image to UL
+                    var newBook = "<li><a href='" + link + "'>" + title + "</a><br>" +
+                        "<img src='" + image + "'>" +
+                        "</li>";
+                    books.innerHTML += newBook;
+                }
+            }
+
+        };
+
+        httpRequest.open("GET", url + search);
+        httpRequest.send();
+
+        // Ready State Codes:
+        // https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState
+
+    </script>
+    
+</body>
+</html>

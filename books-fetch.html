@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Book API</title>
+</head>
+<body>
+
+    <h1>Google Books API</h1>
+
+    <ul id="books"></ul>
+
+    <script>
+
+        var key = '';
+        var url = 'https://www.googleapis.com/books/v1/volumes?q=';
+        var search = 'javascript';
+
+        fetch(url + search).then(function (response) {
+
+            return response.json();
+
+        }).then(function (data) { 
+
+            console.log(data);
+
+            const books = document.getElementById("books");
+
+            data.items.forEach(function(book) {
+
+                    // Fetch title from the next book
+                    let title = book.volumeInfo.title;
+
+                    // Fetch the book URL - infoLink or canonicalVolumeLink
+                    let link = book.volumeInfo.infoLink;
+
+                    // Fetch the book cover image - smallThumbnail or thumbnail
+                    let image = book.volumeInfo.imageLinks.smallThumbnail;
+
+                    let li = document.createElement("li");
+
+                    let a = document.createElement("a");
+                    a.href = link;
+                    let aText = document.createTextNode(title);
+                    a.appendChild(aText);
+
+                    li.appendChild(a);
+
+                    let img = document.createElement("img");
+                    img .src = image;
+
+                    li.appendChild(img);
+
+                    books.appendChild(li);
+
+            });
+
+        });
+
+
+
+    </script>
+    
+</body>
+</html>
